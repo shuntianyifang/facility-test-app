@@ -1,0 +1,15 @@
+{
+  "packageInstall": "pnpm install --frozen-lockfile",
+  "provision": "pnpm setup",
+  "checks": ["pnpm lint", "pnpm typecheck", "pnpm test", "pnpm test:e2e", "pnpm build"],
+  "models": {
+    "codexPlan": "deepseek-v4-flash",
+    "codexBuild": "deepseek-v4-flash"
+  },
+  "executionLane": {
+    "architect": "platform",
+    "codex-architect": "platform",
+    "builder": "platform",
+    "codex-builder": "platform"
+  }
+}
