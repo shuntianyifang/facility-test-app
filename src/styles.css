@@ -290,9 +290,13 @@ h1 {
 }
 .list-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  column-gap: 18px;
+  row-gap: 12px;
   margin-top: 8px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #dee4d9;
 }
 .filters {
@@ -314,6 +318,19 @@ h1 {
   color: #255e42;
   border-color: #255e42;
   font-weight: 600;
+}
+.search {
+  min-width: 0;
+  width: 230px;
+  border: 1px solid #d9e1d5;
+  background: #fafbf8;
+  border-radius: 5px;
+  padding: 9px 12px;
+  font-size: 12px;
+  color: #233d36;
+}
+.search::placeholder {
+  color: #91a08f;
 }
 .list-count {
   font-size: 10px;
@@ -484,6 +501,13 @@ footer {
   }
   .filters {
     gap: 17px;
+  }
+  .search {
+    order: 2;
+    width: 100%;
+  }
+  .list-count {
+    order: 1;
   }
   .empty {
     min-height: 220px;

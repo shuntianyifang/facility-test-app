@@ -1,5 +1,11 @@
 import { type FormEvent, useEffect, useState } from "react";
-import { filterTasks, type Task, type TaskFilter, TITLE_LIMIT } from "../shared/task";
+import {
+  filterByQuery,
+  filterTasks,
+  type Task,
+  type TaskFilter,
+  TITLE_LIMIT,
+} from "../shared/task";
 
 const filters: { value: TaskFilter; label: string }[] = [
   { value: "all", label: "全部任务" },
@@ -18,6 +24,7 @@ export function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState("");
   const [filter, setFilter] = useState<TaskFilter>("all");
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -88,7 +95,8 @@ export function App() {
     }, "任务已删除");
   }
   const completed = tasks.filter((task) => task.completed).length;
-  const visible = filterTasks(tasks, filter);
+  const visible = filterByQuery(filterTasks(tasks, filter), search);
+  const hasQuery = search.trim().length > 0;
   return (
     <div className="workspace">
       <aside className="sidebar">
@@ -194,6 +202,14 @@ export function App() {
                 </button>
               ))}
             </fieldset>
+            <input
+              className="search"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="搜索任务…"
+              aria-label="搜索任务"
+            />
             <span className="list-count">{visible.length} 个任务</span>
           </div>
           {loading ? (
@@ -201,11 +217,19 @@ export function App() {
           ) : visible.length === 0 ? (
             <div className="empty">
               <span className="empty-symbol">✓</span>
-              <h2>{filter === "all" ? "留白，是开始的地方。" : "这个列表暂时是空的。"}</h2>
+              <h2>
+                {hasQuery
+                  ? "没有找到匹配的任务。"
+                  : filter === "all"
+                    ? "留白，是开始的地方。"
+                    : "这个列表暂时是空的。"}
+              </h2>
               <p>
-                {filter === "all"
-                  ? "添加第一个小任务，开始你的第一轮开发验证。"
-                  : "切换筛选，或添加一个新的任务。"}
+                {hasQuery
+                  ? "换个关键词，或清空搜索后查看全部任务。"
+                  : filter === "all"
+                    ? "添加第一个小任务，开始你的第一轮开发验证。"
+                    : "切换筛选，或添加一个新的任务。"}
               </p>
             </div>
           ) : (
