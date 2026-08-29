@@ -9,3 +9,12 @@ export const TITLE_LIMIT = 120;
 export function filterTasks(tasks: Task[], filter: TaskFilter): Task[] {
   return tasks.filter((task) => filter === "all" || task.completed === (filter === "completed"));
 }
+
+export function matchesQuery(title: string, query: string): boolean {
+  const keyword = query.trim().toLowerCase();
+  return keyword === "" || title.toLowerCase().includes(keyword);
+}
+
+export function filterByQuery(tasks: Task[], query: string): Task[] {
+  return tasks.filter((task) => matchesQuery(task.title, query));
+}
