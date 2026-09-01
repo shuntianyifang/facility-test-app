@@ -6,6 +6,10 @@ export interface Task {
 export type TaskFilter = "all" | "active" | "completed";
 export const TITLE_LIMIT = 120;
 
+export function countActiveTasks(tasks: Task[]): number {
+  return tasks.filter((task) => !task.completed).length;
+}
+
 export function filterTasks(tasks: Task[], filter: TaskFilter): Task[] {
   return tasks.filter((task) => filter === "all" || task.completed === (filter === "completed"));
 }

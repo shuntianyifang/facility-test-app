@@ -1,5 +1,6 @@
 import { type FormEvent, useEffect, useState } from "react";
 import {
+  countActiveTasks,
   filterByQuery,
   filterTasks,
   type Task,
@@ -95,6 +96,7 @@ export function App() {
     }, "任务已删除");
   }
   const completed = tasks.filter((task) => task.completed).length;
+  const activeCount = countActiveTasks(tasks);
   const visible = filterByQuery(filterTasks(tasks, filter), search);
   const hasQuery = search.trim().length > 0;
   return (
@@ -135,7 +137,16 @@ export function App() {
           <div className="intro">
             <div>
               <p className="eyebrow">SMALL TASKS. REAL PROGRESS.</p>
-              <h1 id="page-title">把想法，变成下一步。</h1>
+              <div className="title-row">
+                <h1 id="page-title">把想法，变成下一步。</h1>
+                <span
+                  className="active-badge"
+                  role="note"
+                  aria-label={`${activeCount} 个待完成任务`}
+                >
+                  {activeCount} 待完成
+                </span>
+              </div>
               <p className="subtitle">一个任务，一次验证。这里是你的 AI 开发练习室。</p>
             </div>
             <span className="edition">
