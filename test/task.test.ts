@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { filterByQuery, filterTasks, matchesQuery, type Task } from "../shared/task.js";
+import {
+  countActiveTasks,
+  filterByQuery,
+  filterTasks,
+  matchesQuery,
+  type Task,
+} from "../shared/task.js";
 
 const tasks: Task[] = [
   { id: "1", title: "写第一个测试", completed: false },
@@ -25,6 +31,24 @@ describe("matchesQuery", () => {
   it("does not match unrelated titles", () => {
     expect(matchesQuery("写第一个测试", "部署")).toBe(false);
     expect(matchesQuery("写第一个测试", "est")).toBe(false);
+  });
+});
+
+describe("countActiveTasks", () => {
+  it("returns 0 for an empty list", () => {
+    expect(countActiveTasks([])).toBe(0);
+  });
+  it("returns 0 when every task is completed", () => {
+    expect(countActiveTasks(tasks.map((task) => ({ ...task, completed: true })))).toBe(0);
+  });
+  it("counts only tasks whose status is not done", () => {
+    expect(countActiveTasks(tasks)).toBe(2);
+    expect(countActiveTasks([tasks[1]])).toBe(0);
+  });
+  it("does not mutate the input list", () => {
+    const snapshot = [...tasks];
+    countActiveTasks(tasks);
+    expect(tasks).toEqual(snapshot);
   });
 });
 

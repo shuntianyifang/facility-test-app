@@ -28,6 +28,29 @@ test("a user can add, complete, filter, restore, and delete a task", async ({ pa
   await expect(checkbox).toHaveCount(0);
 });
 
+test("the header shows the active task count and stays stable across filters", async ({ page }) => {
+  await page.goto("/");
+  const badge = page.locator(".active-badge");
+  await expect(badge).toHaveText("0 待完成");
+  await expect(badge).toHaveAttribute("aria-label", "0 个待完成任务");
+  await page.getByLabel("下一步想做什么？").fill("写第一个测试");
+  await page.getByRole("button", { name: "添加任务" }).click();
+  await expect(badge).toHaveText("1 待完成");
+  await page.getByLabel("下一步想做什么？").fill("写第二个测试");
+  await page.getByRole("button", { name: "添加任务" }).click();
+  await expect(badge).toHaveText("2 待完成");
+  const checkbox = page.getByRole("checkbox", { name: "完成：写第二个测试" });
+  await checkbox.click();
+  await expect(checkbox).toBeChecked();
+  await expect(badge).toHaveText("1 待完成");
+  await page.getByRole("button", { name: "已完成", exact: true }).click();
+  await expect(badge).toHaveText("1 待完成");
+  await page.getByRole("button", { name: "待完成", exact: true }).click();
+  await expect(badge).toHaveText("1 待完成");
+  await page.getByRole("button", { name: "全部任务", exact: true }).click();
+  await expect(badge).toHaveText("1 待完成");
+});
+
 test("blank titles are rejected and script-like text is not executed", async ({ page }) => {
   await page.goto("/");
   await page.getByLabel("下一步想做什么？").fill("   ");
